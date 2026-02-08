@@ -7,8 +7,9 @@ function getTaskContext(beforeCursor: string): {
   taskIdx: number; // "@task" の開始位置
 } {
   const taskIdx = beforeCursor.lastIndexOf("@task");
-  if (taskIdx === -1) return { hasTaskToken: false, needsEquals: false, taskIdx: -1 };
-
+  if (taskIdx === -1) {
+    return { hasTaskToken: false, needsEquals: false, taskIdx: -1 };
+  }
   const after = beforeCursor.slice(taskIdx + "@task".length);
   const trimmed = after.trimStart();
   const needsEquals = !trimmed.startsWith("=");
@@ -57,7 +58,8 @@ export function registerTaskCompletion(context: vscode.ExtensionContext) {
               : `${wi.name} #id=${wi.id}`;
 
             // どこに入れるかを明示（@task自体は壊さない）
-            item.textEdit = new vscode.TextEdit(replaceRange, insert);
+            item.insertText = insert;
+            item.range = replaceRange;
 
             items.push(item);
           }
