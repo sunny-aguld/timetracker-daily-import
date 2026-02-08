@@ -13,7 +13,8 @@
     "onLanguage:markdown",
     "onCommand:timetracker-daily-import.helloWorld",
     "onCommand:timetracker.loadWorkItems",
-    "onCommand:timetracker.insertWorkItem"
+    "onCommand:timetracker.insertWorkItem",
+    "onCommand:timetracker.debugReadTl"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -29,6 +30,10 @@
       {
         "command": "timetracker.insertWorkItem",
        "title": "TimeTracker: Insert Work Item"
+      },
+      {
+        "command": "timetracker.debugReadTl",
+        "title": "TimeTracker: Debug Read TL"
       }
     ],
     "configuration":{
