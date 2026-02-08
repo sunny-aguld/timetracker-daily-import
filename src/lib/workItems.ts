@@ -5,10 +5,7 @@ import * as path from "path";
 export type WorkItem = { name: string; id: string };
 export type WorkItemsByCategory = Record<string, WorkItem[]>;
 
-const DEFAULT_RELATIVE_PATHS = [
-  path.join("daily", "work_items.json"), // workspace root is "foam"
-  "work_items.json",                     // workspace root is "foam/daily"
-];
+const DEFAULT_WORK_ITEMS_REL_PATH = "daily/work_items.json";
 
 async function fileExists(p: string): Promise<boolean> {
   try {
@@ -35,8 +32,19 @@ export async function loadWorkItemsFromWorkspace(): Promise<{
   }
   const workspaceRoot = folders[0].uri.fsPath;
 
+  const config = vscode.workspace.getConfiguration();
+  const configuredRelPath =
+    config.get<string>("timetrackerDailyImport.workItemsPath") ?? DEFAULT_WORK_ITEMS_REL_PATH;
+
+  // 探索順：設定パス → daily/work_items.json → work_items.json（保険）
+  const candidateRelPaths = [
+    configuredRelPath,
+    "daily/work_items.json",
+    "work_items.json",
+  ];
+
   let found: string | null = null;
-  for (const rel of DEFAULT_RELATIVE_PATHS) {
+  for (const rel of candidateRelPaths) {
     const abs = path.join(workspaceRoot, rel);
     if (await fileExists(abs)) {
       found = abs;
@@ -46,7 +54,7 @@ export async function loadWorkItemsFromWorkspace(): Promise<{
 
   if (!found) {
     throw new Error(
-      `work_items.json not found. Expected at: ${DEFAULT_RELATIVE_PATHS
+      `work_items.json not found. Expected at: ${candidateRelPaths
         .map((p) => path.join(workspaceRoot, p))
         .join(" or ")}`
     );

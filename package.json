@@ -30,7 +30,17 @@
         "command": "timetracker.insertWorkItem",
        "title": "TimeTracker: Insert Work Item"
       }
-    ]
+    ],
+    "configuration":{
+      "title": "TimeTracker Daily Import",
+      "properties": {
+         "timetrackerDailyImport.workItemsPath": {
+           "type": "string",
+           "default": "daily/work_items.json",
+           "description": "Path to work_items.json relative to the workspace root."
+         }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
