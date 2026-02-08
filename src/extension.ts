@@ -10,11 +10,8 @@ import { registerPushTimeEntriesCommand } from "./commands/pushTimeEntries";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	registerHelloCommand(context);
-	registerLoadWorkItemsCommand(context);
 	registerInsertWorkItemCommand(context);
 	registerTaskCompletion(context);
-	registerDebugReadTlCommand(context);
 	registerPushTimeEntriesCommand(context);
 }
 

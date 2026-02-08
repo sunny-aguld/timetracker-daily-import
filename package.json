@@ -11,30 +11,15 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:timetracker-daily-import.helloWorld",
-    "onCommand:timetracker.loadWorkItems",
     "onCommand:timetracker.insertWorkItem",
-    "onCommand:timetracker.debugReadTl",
     "onCommand:timetracker.pushTimeEntries"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "timetracker-daily-import.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "timetracker.loadWorkItems",
-       "title": "TimeTracker: Load Work Items (Debug)"
-      },
-      {
         "command": "timetracker.insertWorkItem",
        "title": "TimeTracker: Insert Work Item"
-      },
-      {
-        "command": "timetracker.debugReadTl",
-        "title": "TimeTracker: Debug Read TL"
       },
       {
         "command": "timetracker.pushTimeEntries",
