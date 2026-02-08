@@ -10,7 +10,10 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:timetracker.loadWorkItems"
+    "onLanguage:markdown",
+    "onCommand:timetracker-daily-import.helloWorld",
+    "onCommand:timetracker.loadWorkItems",
+    "onCommand:timetracker.insertWorkItem"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -22,6 +25,10 @@
       {
         "command": "timetracker.loadWorkItems",
        "title": "TimeTracker: Load Work Items (Debug)"
+      },
+      {
+        "command": "timetracker.insertWorkItem",
+       "title": "TimeTracker: Insert Work Item"
       }
     ]
   },
