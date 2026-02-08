@@ -3,6 +3,7 @@ import { extractTlLines, parseTlLines } from "../lib/tlParser";
 import { buildTimeEntryRequestsFromTl } from "../lib/tlToEntries";
 import { getMe, issueToken, postTimeEntry } from "../lib/timetrackerApi";
 import { loadUserCredentialsFromWorkspace } from "../lib/userCredentials";
+import { markDateSubmitted } from "../lib/ledger";
 
 function getDateFromDocument(doc: vscode.TextDocument): string {
   const file = doc.fileName.replace(/\\/g, "/");
@@ -75,8 +76,10 @@ export function registerPushTimeEntriesCommand(context: vscode.ExtensionContext)
           }
         }
       );
-
-      vscode.window.showInformationMessage(`Sent ${reqs.length} time entries to TimeTracker.`);
+      const ledger = await markDateSubmitted(date);
+      vscode.window.showInformationMessage(
+        `Sent ${reqs.length} time entries to TimeTracker. Ledger: ${ledger.updated ? "updated" : "already recorded"}`
+      );
     } catch (e: any) {
       vscode.window.showErrorMessage(`Failed to send time entries: ${e?.message ?? String(e)}`);
     }
