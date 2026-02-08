@@ -9,13 +9,19 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:timetracker.loadWorkItems"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "timetracker-daily-import.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "timetracker.loadWorkItems",
+       "title": "TimeTracker: Load Work Items (Debug)"
       }
     ]
   },
