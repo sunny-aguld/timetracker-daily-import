@@ -6,6 +6,7 @@ import { registerLoadWorkItemsCommand } from "./commands/loadWorkItems";
 import { registerInsertWorkItemCommand } from "./commands/insertWorkItem";
 import { registerTaskCompletion } from "./providers/taskCompletion";
 import { registerDebugReadTlCommand } from "./commands/debugReadTl";
+import { registerPushTimeEntriesCommand } from "./commands/pushTimeEntries";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -14,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	registerInsertWorkItemCommand(context);
 	registerTaskCompletion(context);
 	registerDebugReadTlCommand(context);
+	registerPushTimeEntriesCommand(context);
 }
 
 // This method is called when your extension is deactivated

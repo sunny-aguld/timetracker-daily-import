@@ -14,7 +14,8 @@
     "onCommand:timetracker-daily-import.helloWorld",
     "onCommand:timetracker.loadWorkItems",
     "onCommand:timetracker.insertWorkItem",
-    "onCommand:timetracker.debugReadTl"
+    "onCommand:timetracker.debugReadTl",
+    "onCommand:timetracker.pushTimeEntries"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -34,16 +35,25 @@
       {
         "command": "timetracker.debugReadTl",
         "title": "TimeTracker: Debug Read TL"
+      },
+      {
+        "command": "timetracker.pushTimeEntries",
+        "title": "TimeTracker: Push Time Entries From TL"
       }
     ],
     "configuration":{
       "title": "TimeTracker Daily Import",
       "properties": {
-         "timetrackerDailyImport.workItemsPath": {
+        "timetrackerDailyImport.workItemsPath": {
            "type": "string",
            "default": "daily/work_items.json",
            "description": "Path to work_items.json relative to the workspace root."
-         }
+        },
+        "timetrackerDailyImport.apiBaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "TimeTracker Web API base URL. Example: https://<server>/<site>/api"
+        }
       }
     }
   },
