@@ -1,13 +1,8 @@
 import { TlItem } from "./tlParser";
 
-/**
- * TimeTracker 実績工数追加API向けの形（最小）
- * POST /system/users/{userId}/timeEntries
- * 主要フィールド: workItemId, startTime, finishTime, memo
- */
 export type TimeEntryRequest = {
   workItemId: string;
-  startTime: string; // "YYYY-MM-DDTHH:MM:SS"
+  startTime: string;  // "YYYY-MM-DDTHH:MM:SS"
   finishTime: string; // "YYYY-MM-DDTHH:MM:SS"
   memo?: string;
 };
@@ -18,39 +13,52 @@ function toMinutes(hhmm: string): number {
 }
 
 function toDateTime(date: string, hhmm: string): string {
-  // 秒は 00 固定（必要になれば将来拡張）
   return `${date}T${hhmm}:00`;
 }
 
 /**
- * TLから API送信用の配列を作る
- * - 作業行のみエントリ生成
- * - finishTime は「次の行の時刻」を使用（次行が終業でもOK）
+ * 厳格版：異常があれば中断（throw）
+ * - 作業行（#idあり）→ 次行の時刻で閉じる（次行はmarkerでもOK）
+ * - 逆転/同時刻 → エラー中断
+ * - 最後の作業行が「次の時刻」で閉じられない → エラー中断
  */
-export function buildTimeEntryRequestsFromTl(date: string, items: TlItem[]): TimeEntryRequest[] {
+export function buildTimeEntryRequestsFromTlStrict(date: string, items: TlItem[]): TimeEntryRequest[] {
   const reqs: TimeEntryRequest[] = [];
+
+  // 作業行が1つも無いのはエラー（送るものが無い）
+  const hasWork = items.some((x) => x.kind === "work" && x.workItemId);
+  if (!hasWork) {
+    throw new Error("TL format error: no work items found (#id=...).");
+  }
 
   for (let i = 0; i < items.length - 1; i++) {
     const cur = items[i];
     const next = items[i + 1];
 
-    if (cur.kind !== "work" || !cur.workItemId) {
-      continue;
-    }
-
-    // 同時刻/逆転は無視（APIも弾くため）
     const startM = toMinutes(cur.time);
     const endM = toMinutes(next.time);
     if (endM <= startM) {
-      continue;
+      throw new Error(
+        `TL time order error at line ${cur.lineNo}: ${cur.time} -> ${next.time} (must be increasing)`
+      );
     }
 
-    reqs.push({
-      workItemId: cur.workItemId,
-      startTime: toDateTime(date, cur.time),
-      finishTime: toDateTime(date, next.time),
-      memo: cur.memo ?? "",
-    });
+    if (cur.kind === "work" && cur.workItemId) {
+      reqs.push({
+        workItemId: cur.workItemId,
+        startTime: toDateTime(date, cur.time),
+        finishTime: toDateTime(date, next.time),
+        memo: cur.memo ?? "",
+      });
+    }
+  }
+
+  // 最後が作業行で閉じていない場合はエラー
+  const last = items[items.length - 1];
+  if (last.kind === "work") {
+    throw new Error(
+      `TL format error at line ${last.lineNo}: last work item is not closed. Add an end time line (e.g., "16:00 終業").`
+    );
   }
 
   return reqs;

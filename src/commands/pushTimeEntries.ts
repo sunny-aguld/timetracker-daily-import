@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { extractTlLines, parseTlLines } from "../lib/tlParser";
-import { buildTimeEntryRequestsFromTl } from "../lib/tlToEntries";
+import { extractTlLines, parseTlLinesStrict } from "../lib/tlParser";
+import { buildTimeEntryRequestsFromTlStrict } from "../lib/tlToEntries";
 import { getMe, issueToken, postTimeEntry } from "../lib/timetrackerApi";
 import { loadUserCredentialsFromWorkspace } from "../lib/userCredentials";
 import { markDateSubmitted } from "../lib/ledger";
@@ -43,8 +43,8 @@ export function registerPushTimeEntriesCommand(context: vscode.ExtensionContext)
 
     const text = editor.document.getText();
     const tlLines = extractTlLines(text);
-    const items = parseTlLines(tlLines);
-    const reqs = buildTimeEntryRequestsFromTl(date, items);
+    const items = parseTlLinesStrict(tlLines);
+    const reqs = buildTimeEntryRequestsFromTlStrict(date, items);
 
     if (reqs.length === 0) {
       vscode.window.showWarningMessage("No TimeEntryRequests to send (check TL).");

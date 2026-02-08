@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
-import { extractTlLines, parseTlLines } from "../lib/tlParser";
-import { buildTimeEntryRequestsFromTl } from "../lib/tlToEntries";
+import { extractTlLines, parseTlLinesStrict } from "../lib/tlParser";
+import { buildTimeEntryRequestsFromTlStrict } from "../lib/tlToEntries";
+
 
 function getDateFromDocument(doc: vscode.TextDocument): string {
   const file = doc.fileName.replace(/\\/g, "/");
@@ -37,9 +38,8 @@ export function registerDebugReadTlCommand(context: vscode.ExtensionContext) {
 
     const text = editor.document.getText();
     const tlLines = extractTlLines(text);
-    const items = parseTlLines(tlLines);
-
-    const reqs = buildTimeEntryRequestsFromTl(date, items);
+    const items = parseTlLinesStrict(tlLines);
+    const reqs = buildTimeEntryRequestsFromTlStrict(date, items);
 
     const ch = vscode.window.createOutputChannel("TimeTracker Daily Import");
     ch.clear();
