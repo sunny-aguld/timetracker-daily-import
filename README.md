@@ -33,6 +33,24 @@ VS Code extension to assist daily note input and send TimeTracker time entries f
 - Every TL line except the last closing line must include `#id=<id>`.
 - If TL format is invalid, the process stops with an error.
 
+## Build VSIX
+
+To create a distributable VSIX for another PC:
+
+```powershell
+npm.cmd install
+npm.cmd run package:vsix
+```
+
+The output file is created in the repository root, for example `timetracker-daily-import-1.0.1.vsix`.
+
+To install it on another PC:
+
+1. Copy the `.vsix` file.
+2. In VS Code, open `Extensions: Install from VSIX...`.
+3. Select the copied `.vsix`.
+4. Reload VS Code if prompted.
+
 ## License
 
 MIT

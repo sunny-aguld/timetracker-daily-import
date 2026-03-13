@@ -1,5 +1,7 @@
 .vscode/**
 .vscode-test/**
+dev-fixture/**
+docs/**
 out/**
 node_modules/**
 src/**

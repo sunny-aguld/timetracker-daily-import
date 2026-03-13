@@ -6,4 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.0.1]
+
+- Require `#id` on every TL line except the last closing line.
+- Add a `package:vsix` script and VSIX distribution instructions.
+
+## [1.0.0]
+
 - Initial release
