@@ -76,8 +76,10 @@ export function extractTlLines(markdown: string): TlLine[] {
 export function parseTlLinesStrict(lines: TlLine[]): TlItem[] {
   const items: TlItem[] = [];
 
-  for (const l of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
     const line = l.text.replace(/\u00A0/g, " ").trim();
+    const isLastLine = i === lines.length - 1;
 
     // 先頭に「時刻 + 半角スペース以降」が必須
     const m = line.match(/^(\S+)\s+(.*)$/);
@@ -91,7 +93,13 @@ export function parseTlLinesStrict(lines: TlLine[]): TlItem[] {
     const mId = body.match(/#id=(\d+)/);
     const mTask = body.match(/@task=([^\s#]+)/);
 
-    // #id があれば作業行。なければ marker 行。
+    if (!mId && !isLastLine) {
+      throw new Error(
+        `TL format error at line ${l.lineNo}: #id is required for all TL lines except the last closing line`
+      );
+    }
+
+    // #id があれば作業行。最終行のみ #id なしの marker を許可。
     if (mId) {
       const memo = body
         .replace(/@task=[^\s#]+/g, "")

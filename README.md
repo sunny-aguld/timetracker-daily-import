@@ -30,6 +30,7 @@ VS Code extension to assist daily note input and send TimeTracker time entries f
 ## Notes
 
 - This extension assumes TL format uses `HH:MM` time (e.g. `09:00`).
+- Every TL line except the last closing line must include `#id=<id>`.
 - If TL format is invalid, the process stops with an error.
 
 ## License
